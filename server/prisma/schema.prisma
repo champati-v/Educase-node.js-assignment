@@ -1,0 +1,96 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Get a free hosted Postgres database in seconds: `npx create-db`
+
+generator client {
+  provider = "prisma-client"
+  output   = "../src/generated/prisma"
+}
+
+datasource db {
+  provider = "mysql" 
+}
+
+model Profile {
+  id               Int     @id @default(autoincrement())
+  
+  githubId         Int     @unique
+  login            String  @unique
+  
+  name             String?
+  bio              String? @db.Text
+
+  avatarUrl        String?
+  htmlUrl          String?
+
+  followers        String?   @default("0")
+  following        String?   @default("0")
+  publicRepos      String? 
+
+  githubCreatedAt  DateTime?
+
+  createdAt        DateTime @default(now())
+  updatedAt        DateTime @updatedAt
+
+  repositories Repository[]
+  analytics    ProfileAnalytics[]
+
+  @@map("profiles")
+}
+
+model Repository {
+  id                Int       @id @default(autoincrement())
+
+  githubRepoId      Int       @unique
+
+  name              String
+  fullName          String
+
+  description       String?   @db.Text
+
+  language          String?
+
+  stars             Int       @default(0)
+  forks             Int       @default(0)
+  watchers          Int       @default(0)
+
+  htmlUrl           String?
+
+  fork              Boolean   @default(false)
+
+  visibility        String?
+
+  pushedAt          DateTime?
+
+  createdAt         DateTime  @default(now())
+  updatedAt         DateTime  @updatedAt
+
+  profileId         Int
+  profile           Profile   @relation(fields: [profileId], references: [id], onDelete: Cascade)
+
+  @@index([profileId])
+
+  @@map("repositories")
+}
+
+model ProfileAnalytics {
+  id                    Int       @id @default(autoincrement())
+
+  totalStars            Int       @default(0)
+  totalForks            Int       @default(0)
+
+  mostUsedLanguage      String?
+
+  topRepository         String?
+
+  developerScore        Int       @default(0)
+
+  createdAt             DateTime  @default(now())
+  updatedAt             DateTime  @updatedAt
+
+  profileId             Int       @unique
+  profile               Profile   @relation(fields: [profileId], references: [id], onDelete: Cascade)
+
+  @@map("profile_analytics")
+}
