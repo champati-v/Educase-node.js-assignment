@@ -1,40 +1,35 @@
-// This is your Prisma schema file,
-// learn more about it in the docs: https://pris.ly/d/prisma-schema
-
-// Get a free hosted Postgres database in seconds: `npx create-db`
-
 generator client {
-  provider = "prisma-client"
-  output   = "../src/generated/prisma"
+  provider = "prisma-client-js"
 }
 
 datasource db {
-  provider = "mysql" 
+  provider = "mysql"
+  url      = env("DATABASE_URL")
 }
 
 model Profile {
-  id               Int     @id @default(autoincrement())
-  
-  githubId         Int     @unique
-  login            String  @unique
-  
-  name             String?
-  bio              String? @db.Text
+  id            Int       @id @default(autoincrement())
 
-  avatarUrl        String?
-  htmlUrl          String?
+  githubId      Int       @unique
+  login         String    @unique
 
-  followers        String?   @default("0")
-  following        String?   @default("0")
-  publicRepos      String? 
+  name          String?
+  bio           String?   @db.Text
 
-  githubCreatedAt  DateTime?
+  avatarUrl     String?
+  htmlUrl       String?
 
-  createdAt        DateTime @default(now())
-  updatedAt        DateTime @updatedAt
+  followers     Int       @default(0)
+  following     Int       @default(0)
+  publicRepos   Int       @default(0)
 
-  repositories Repository[]
-  analytics    ProfileAnalytics[]
+  githubCreatedAt DateTime?
+
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+
+  repositories  Repository[]
+  analytics     ProfileAnalytics?
 
   @@map("profiles")
 }

@@ -1,17 +1,26 @@
-import mysql from 'mysql2/promise';
+import express from "express";
+import cors from "cors";
+import morgan from "morgan";
 
-const db = await mysql.createConnection({
-    host: 'localhost',
-    user: 'root',
-    password: 'Piku@2024',
-    database: 'github_analyzer'
+import testRoutes from "./routes/test.routes.js";
+import githubRoutes from "./routes/github.routes.js";
+
+const app = express();
+
+app.use(cors());
+app.use(express.json());
+app.use(morgan("dev"));
+
+
+app.get("/api/health", (req, res) => {
+    res.status(200).json({
+        success: true,
+        message: "Server is running!",
+    });
 });
 
-console.log('Connected to MySQL database');
+//test route
+app.use("/api/test", testRoutes);
+app.use("/api/github", githubRoutes);
 
-//DB created
-// await db.execute(`create database github_analyzer`);
-
-await db.execute(`
-    CREATE TABLE     
-    `)
+export default app;
