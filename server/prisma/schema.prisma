@@ -25,6 +25,8 @@ model Profile {
 
   githubCreatedAt DateTime?
 
+  lastAnalyzedAt  DateTime? @default(now())
+
   createdAt     DateTime  @default(now())
   updatedAt     DateTime  @updatedAt
 
@@ -40,29 +42,23 @@ model Repository {
   githubRepoId      Int       @unique
 
   name              String
-  fullName          String
-
   description       String?   @db.Text
 
   language          String?
 
   stars             Int       @default(0)
   forks             Int       @default(0)
-  watchers          Int       @default(0)
 
   htmlUrl           String?
 
-  fork              Boolean   @default(false)
-
-  visibility        String?
-
   pushedAt          DateTime?
+
+  profileId         Int
+  profile           Profile   @relation(fields: [profileId], references: [id], onDelete: Cascade)
 
   createdAt         DateTime  @default(now())
   updatedAt         DateTime  @updatedAt
 
-  profileId         Int
-  profile           Profile   @relation(fields: [profileId], references: [id], onDelete: Cascade)
 
   @@index([profileId])
 
@@ -77,15 +73,19 @@ model ProfileAnalytics {
 
   mostUsedLanguage      String?
 
+  languageDistribution  Json?  
+
   topRepository         String?
 
   developerScore        Int       @default(0)
 
-  createdAt             DateTime  @default(now())
-  updatedAt             DateTime  @updatedAt
+  lastActiveAt          DateTime?
 
   profileId             Int       @unique
   profile               Profile   @relation(fields: [profileId], references: [id], onDelete: Cascade)
+
+  createdAt             DateTime  @default(now())
+  updatedAt             DateTime  @updatedAt
 
   @@map("profile_analytics")
 }

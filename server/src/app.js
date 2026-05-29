@@ -4,6 +4,7 @@ import morgan from "morgan";
 
 import testRoutes from "./routes/test.routes.js";
 import githubRoutes from "./routes/github.routes.js";
+import profileRoutes from "./routes/profile.routes.js";
 
 const app = express();
 
@@ -22,5 +23,6 @@ app.get("/api/health", (req, res) => {
 //test route
 app.use("/api/test", testRoutes);
 app.use("/api/github", githubRoutes);
+app.use("/api/profiles", profileRoutes);
 
 export default app;
