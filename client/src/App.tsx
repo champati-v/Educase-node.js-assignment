@@ -5,6 +5,7 @@ import { useState, useEffect } from 'react'
 import Sidebar from './components/sidebar/Sidebar'
 import Dashboard from './pages/Dashboard'
 import History from './pages/History'
+import { Button } from './components/ui/button'
 import type { HistoryProfile } from './types'
 
 const queryClient = new QueryClient({
@@ -18,6 +19,7 @@ const queryClient = new QueryClient({
 
 export default function App() {
   const [recentProfiles, setRecentProfiles] = useState<HistoryProfile[]>([])
+  const [showRenderNotice, setShowRenderNotice] = useState(true)
 
   useEffect(() => {
     document.documentElement.classList.add('dark')
@@ -47,7 +49,7 @@ export default function App() {
   return (
     <QueryClientProvider client={queryClient}>
       <Router>
-        <div className="flex h-screen bg-background text-foreground">
+        <div className="relative flex h-screen bg-background text-foreground">
           <Sidebar recentProfiles={recentProfiles} />
           <Routes>
             <Route
@@ -61,6 +63,21 @@ export default function App() {
               element={<History recentProfiles={recentProfiles} />}
             />
           </Routes>
+
+          {showRenderNotice && (
+            <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/70 p-4">
+              <div className="w-full max-w-xl rounded-xl border border-border bg-card p-6 text-card-foreground shadow-2xl">
+                <p className="text-sm leading-relaxed sm:text-base">
+                  I&apos;m using a free instance of Render to deploy the backend service. It will spin down with inactivity, which can delay API requests by 50 seconds or more. So please wait for some time for the response.
+                </p>
+                <div className="mt-5 flex justify-end">
+                  <Button onClick={() => setShowRenderNotice(false)}>
+                    Understood
+                  </Button>
+                </div>
+              </div>
+            </div>
+          )}
         </div>
         <Toaster theme="dark" position="bottom-right" />
       </Router>
