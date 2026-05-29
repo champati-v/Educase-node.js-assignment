@@ -39,7 +39,7 @@ model Profile {
 model Repository {
   id                Int       @id @default(autoincrement())
 
-  githubRepoId      Int       @unique
+  githubRepoId      Int 
 
   name              String
   description       String?   @db.Text

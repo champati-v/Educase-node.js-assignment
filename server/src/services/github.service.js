@@ -8,7 +8,13 @@ const GITHUB_BASE_URL = process.env.GITHUB_BASE_URL;
 export const fetchGitHubProfile = async (username) => {
   try {
     const response = await axios.get(
-      `${GITHUB_BASE_URL}/users/${username}`
+      `${GITHUB_BASE_URL}/users/${username}`,
+      {
+        headers:{
+          Authorization: `Bearer ${process.env.GITHUB_ACCESS_TOKEN}`,
+          Accept: "application/vnd.github.v3+json",
+        }
+      }
     );
 
     return response.data;
@@ -24,6 +30,10 @@ export const fetchGitHubRepositories = async (username) => {
     const response = await axios.get(
       `${GITHUB_BASE_URL}/users/${username}/repos`,
       {
+        headers:{
+          Authorization: `Bearer ${process.env.GITHUB_ACCESS_TOKEN}`,
+          Accept: "application/vnd.github.v3+json",
+        },
         params: {
           per_page: 100,
           sort: "updated",
