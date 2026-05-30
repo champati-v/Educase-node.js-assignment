@@ -7,7 +7,10 @@ import Dashboard from './pages/Dashboard'
 import History from './pages/History'
 import { Button } from './components/ui/button'
 import type { HistoryProfile } from './types'
-import { Analytics } from "@vercel/analytics/next"
+import { inject } from "@vercel/analytics"
+
+// Initialize Vercel Analytics
+inject()
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -49,7 +52,6 @@ export default function App() {
 
   return (
     <QueryClientProvider client={queryClient}>
-      <Analytics />
       <Router>
         <div className="relative flex h-screen bg-background text-foreground">
           <Sidebar recentProfiles={recentProfiles} />
